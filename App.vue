@@ -2,6 +2,13 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			
+			// 引入nvue字体图标库，本地ttf字体文件。
+			const domModule = weex.requireModule('dom')
+			domModule.addRule('fontFace', {
+				'fontFamily': "iconfont",
+				'src': "url('/static/iconfont.ttf')"
+			});
 		},
 		onShow: function() {
 			console.log('App Show')
