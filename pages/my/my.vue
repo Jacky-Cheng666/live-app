@@ -1,12 +1,19 @@
 <template>
-	<view class="">
-		<text class="iconfont" style="font-size: 100rpx;">&#xe620;</text>
+	<view>
+		个人中心
 	</view>
 </template>
 
 <script>
 	export default {
-		
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+
+		}
 	}
 </script>
 
