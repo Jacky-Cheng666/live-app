@@ -3,7 +3,16 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"titleText": "直播",
+						"titleAlign": "left",
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
 			}
 		}, {
 			"path": "pages/my/my",
@@ -15,10 +24,10 @@
 		}
 	],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "一直播",
+		"navigationBarBackgroundColor": "#8745FF",
+		"backgroundColor": "#8745FF"
 	},
 	"tabBar": {
 		"color": "#707070",
@@ -28,7 +37,7 @@
 		"midButton": {
 			"iconPath": "static/tabbar/min.png",
 			"iconWidth": "60px",
-			"height":"65px"
+			"height": "65px"
 		},
 		"list": [{
 				"iconPath": "static/tabbar/find.png",
