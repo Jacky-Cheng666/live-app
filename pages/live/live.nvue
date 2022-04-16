@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<video class="flex-1" :src="pullUrl" autoplay :controls="false"></video>
+		<!-- <video class="flex-1" :src="pullUrl" autoplay :controls="false"></video> -->
 
 		<!-- 上部分 -->
 		<view class="position-fixed left-0 right-0" :style="`top: ${statusBarH}`">
@@ -49,13 +49,12 @@
 		</view>
 
 		<!-- 弹幕部分 -->
-		<view class="position-fixed left-0 right-0 bg-warning" style="bottom: 120rpx;height: 300rpx;width: 520rpx;">
-		</view>
+		<f-danmu ref="danmu"></f-danmu>
 
 		<!-- 底部 -->
 		<view class="position-fixed left-0 right-0 bottom-0 flex align-center justify-between" style="height: 120rpx;">
 			<view class="px-2">
-				<view class="px-3 btn">
+				<view class="px-3 btn" @tap="openInput">
 					<text class="text-white font">说点什么...</text>
 				</view>
 			</view>
@@ -69,24 +68,39 @@
 				<view class="btn mr-2" style="width: 80rpx;">
 					<text class="iconfont text-white">&#xe7cd;</text>
 				</view>
-				<view class="btn mr-2" style="width: 80rpx;">
+				<view class="btn mr-2" style="width: 80rpx;" @tap="back">
 					<text class="iconfont text-white">&#xe607;</text>
 				</view>
 			</view>
 		</view>
+
+		<!-- 输入框弹出层 -->
+		<uni-popup ref="input" type="bottom">
+			<view class="bg-white flex align-center px-3" style="height: 120rpx;">
+				<input class="flex-1 border rounded px-3 font-md" v-model="content" placeholder="说点什么吧" type="text"
+					style="height: 80rpx;">
+				<view class="flex align-center justify-center ml-3 rounded"
+					:class="content.length===0?'bg-main-disabled':'bg-main'" @tap="submit">
+					<text class="font text-white px-2 py-2">发送</text>
+				</view>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
 <script>
 	import fGift from '@/components/live/f-gift.vue'
+	import fDanmu from '@/components/live/f-danmu.vue'
 	export default {
 		components: {
-			fGift
+			fGift,
+			fDanmu
 		},
 		data() {
 			return {
 				pullUrl: 'https://www.eyuai.com/upload/d1fee065-2f37-4e08-be45-d0a27e0cc0c5/newsvido/0c45ae07-5da1-4046-b4f6-8de4cbbbfded.mp4',
-				statusBarH: 0
+				statusBarH: 0,
+				content: ""
 			}
 		},
 		onLoad() {
@@ -104,9 +118,37 @@
 					num: 9
 				})
 			}, 3000)
+
+			// 发送弹幕演示
+			let id = 1
+			setInterval(() => {
+				this.$refs.danmu.send({
+					id,
+					name: '池厅长' + id,
+					content: '听说校花俞小曼很好看'
+				})
+				id++
+			}, 3000)
 		},
 		methods: {
-
+			openInput() {
+				this.$refs.input.open()
+			},
+			submit() {
+				if (this.content.length === 0) return
+				this.$refs.danmu.send({
+					id: new Date().getTime(),
+					name: '马翠张',
+					content: this.content.trim()
+				})
+				this.content = ''
+				this.$refs.input.close()
+			},
+			back() {
+				uni.navigateBack({
+					delta: 1
+				})
+			}
 		}
 	}
 </script>
