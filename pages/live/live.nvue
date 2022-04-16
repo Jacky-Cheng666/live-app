@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<!-- <video class="flex-1" :src="pullUrl" autoplay :controls="false"></video> -->
+		<video class="flex-1" :src="pullUrl" autoplay :controls="false"></video>
 
 		<!-- 上部分 -->
 		<view class="position-fixed left-0 right-0" :style="`top: ${statusBarH}`">
@@ -45,25 +45,7 @@
 				</view>
 			</view>
 			<!-- 收到礼物 -->
-			<view class="" style="height: 500rpx;">
-				<scroll-view :show-scrollbar="false" scroll-y="true" class="px-3" style="width: 520rpx;height: 500rpx;">
-					<view class="flex align-center mb-5" v-for="i in 20">
-						<view class="rounded-circle flex-1 flex align-center p"
-							style="background-image: linear-gradient(to right, #BCABB1 , #65AAF0);">
-							<view class="flex-1 flex align-center">
-								<image src="/static/tabbar/min.png" style="width: 70rpx;height: 70rpx;"></image>
-								<view class="ml-1">
-									<text class="text-white font-md">沧浪之水</text>
-									<text class="text-white font">送出豪华游艇</text>
-								</view>
-							</view>
-							<image class="rounded-circle" src="/static/gift/1.png" style="width: 70rpx;height: 70rpx;">
-							</image>
-						</view>
-						<text class="text-warning ml-3 font-lg">X 99</text>
-					</view>
-				</scroll-view>
-			</view>
+			<f-gift></f-gift>
 		</view>
 
 		<!-- 弹幕部分 -->
@@ -76,7 +58,11 @@
 </template>
 
 <script>
+	import fGift from '@/components/live/f-gift.vue'
 	export default {
+		components: {
+			fGift
+		},
 		data() {
 			return {
 				pullUrl: 'https://www.eyuai.com/upload/d1fee065-2f37-4e08-be45-d0a27e0cc0c5/newsvido/0c45ae07-5da1-4046-b4f6-8de4cbbbfded.mp4',
