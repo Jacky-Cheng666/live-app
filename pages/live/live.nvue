@@ -1,6 +1,7 @@
 <template>
 	<view class="page">
 		<!-- <video class="flex-1" :src="pullUrl" autoplay :controls="false"></video> -->
+
 		<!-- 上部分 -->
 		<view class="position-fixed left-0 right-0" :style="`top: ${statusBarH}`">
 			<!-- 个人信息|观看详细信息 -->
@@ -23,8 +24,9 @@
 					</view>
 				</view>
 				<!-- 右边 -->
-				<view class="flex-1 flex align-center rounded-circle px-1 ml-5" style="background-color: rgba(0,0,0,.4);">
-					<scroll-view class="flex-1 flex" scroll-x="true">
+				<view class="flex-1 flex align-center rounded-circle px-1 ml-5"
+					style="background-color: rgba(0,0,0,.4);">
+					<scroll-view :show-scrollbar="false" class="flex-1 flex" scroll-x="true">
 						<image v-for="i in 20" :key="i" class="rounded-circle" src="/static/tabbar/min.png"
 							style="width: 70rpx;height: 70rpx;">
 					</scroll-view>
@@ -34,9 +36,33 @@
 					</view>
 				</view>
 			</view>
-			<view class="bg-primary" style="height: 80rpx;"></view>
+			<!-- 金币 -->
+			<view class="px-2 my-2 flex align-center" style="height: 80rpx;">
+				<view class="flex align-center rounded-circle p-2"
+					style="background-color: rgba(0,0,0,.4);width: 300rpx;">
+					<text class="text-warning font mr-1">金币</text>
+					<text class="text-white font">0</text>
+				</view>
+			</view>
+			<!-- 收到礼物 -->
 			<view class="" style="height: 500rpx;">
-				<view class="bg-success" style="width: 520rpx;height: 500rpx;"></view>
+				<scroll-view :show-scrollbar="false" scroll-y="true" class="px-3" style="width: 520rpx;height: 500rpx;">
+					<view class="flex align-center mb-5" v-for="i in 20">
+						<view class="rounded-circle flex-1 flex align-center p"
+							style="background-image: linear-gradient(to right, #BCABB1 , #65AAF0);">
+							<view class="flex-1 flex align-center">
+								<image src="/static/tabbar/min.png" style="width: 70rpx;height: 70rpx;"></image>
+								<view class="ml-1">
+									<text class="text-white font-md">沧浪之水</text>
+									<text class="text-white font">送出豪华游艇</text>
+								</view>
+							</view>
+							<image class="rounded-circle" src="/static/gift/1.png" style="width: 70rpx;height: 70rpx;">
+							</image>
+						</view>
+						<text class="text-warning ml-3 font-lg">X 99</text>
+					</view>
+				</scroll-view>
 			</view>
 		</view>
 
