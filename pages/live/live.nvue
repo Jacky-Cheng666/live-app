@@ -45,7 +45,7 @@
 				</view>
 			</view>
 			<!-- 收到礼物 -->
-			<f-gift></f-gift>
+			<f-gift ref="gift"></f-gift>
 		</view>
 
 		<!-- 弹幕部分 -->
@@ -71,6 +71,19 @@
 		},
 		onLoad() {
 			this.statusBarH = uni.getSystemInfoSync().statusBarHeight
+
+		},
+		onReady() {
+			// 送礼物演示
+			setInterval(() => {
+				this.$refs.gift.send({
+					username: "池大为",
+					avatar: "",
+					gift_name: "豪华游艇",
+					gift_image: "/static/gift/3.png",
+					num: 9
+				})
+			}, 3000)
 		},
 		methods: {
 

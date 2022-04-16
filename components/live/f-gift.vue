@@ -29,21 +29,14 @@
 				defaultAvatar: '/static/tabbar/min.png'
 			}
 		},
-		created() {
-			let num = 0
-			setInterval(() => {
-				num++
-				this.gifts.push({
-					username: "池大为",
-					avatar: "",
-					gift_name: "豪华游艇",
-					gift_image: "/static/gift/3.png",
-					num: num
-				})
-				this.toBottom()
-			}, 1000)
-		},
 		methods: {
+			// 送礼物
+			send(gift) {
+				this.gifts.push(gift)
+				this.toBottom()
+				this.autoHide()
+			},
+			// 滚动到最底部
 			toBottom() {
 				this.$nextTick(() => {
 					let index = this.gifts.length - 1
@@ -52,6 +45,14 @@
 						dom.scrollToElement(this.$refs[ref][0], {})
 					}
 				})
+			},
+			// 自动消失
+			autoHide() {
+				if (this.gifts.length) {
+					let timer = setTimeout(() => {
+						this.gifts.splice(0, 1)
+					}, 5000)
+				}
 			}
 		}
 	}
