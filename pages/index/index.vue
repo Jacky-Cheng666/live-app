@@ -13,7 +13,7 @@
 
 		<!-- 直播列表 -->
 		<view class="flex flex-wrap">
-			<view class="p position-relative list-item" v-for="i in 20" :key="i">
+			<view class="p position-relative list-item" v-for="i in 20" :key="i" @tap="openLive">
 				<image class="rounded" src="/static/demo/1.jpg" mode="aspectFill" style="width: 365rpx;height: 365rpx;">
 				</image>
 				<view class="rounded-circle position-absolute px-2 flex align-center"
@@ -51,7 +51,11 @@
 
 		},
 		methods: {
-
+			openLive() {
+				uni.navigateTo({
+					url: '/pages/live/live'
+				})
+			}
 		}
 	}
 </script>

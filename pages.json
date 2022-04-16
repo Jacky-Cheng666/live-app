@@ -21,6 +21,16 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "pages/live/live",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+
 		}
 	],
 	"globalStyle": {

@@ -1,0 +1,73 @@
+<template>
+	<view class="page">
+		<!-- <video class="flex-1" :src="pullUrl" autoplay :controls="false"></video> -->
+		<!-- 上部分 -->
+		<view class="position-fixed left-0 right-0" :style="`top: ${statusBarH}`">
+			<!-- 个人信息|观看详细信息 -->
+			<view class="px-2 flex justify-between" style="height: 80rpx;">
+				<!-- 左边 -->
+				<view class="flex-1 flex justify-between align-center rounded-circle"
+					style="background-color: rgba(0,0,0,.4);">
+					<view class="p flex align-center">
+						<image class="rounded-circle" src="/static/tabbar/min.png" style="width: 70rpx;height: 70rpx;">
+						</image>
+						<view class="ml-1">
+							<text class="text-white font">昵称</text>
+							<text class="text-white font">999+</text>
+						</view>
+					</view>
+					<!-- 关注 -->
+					<view class="rounded-circle flex justify-center align-center bg-danger mr-1"
+						style="width: 70rpx;height: 70rpx;">
+						<text class="text-white font-big">+</text>
+					</view>
+				</view>
+				<!-- 右边 -->
+				<view class="flex-1 flex align-center rounded-circle px-1 ml-5" style="background-color: rgba(0,0,0,.4);">
+					<scroll-view class="flex-1 flex" scroll-x="true">
+						<image v-for="i in 20" :key="i" class="rounded-circle" src="/static/tabbar/min.png"
+							style="width: 70rpx;height: 70rpx;">
+					</scroll-view>
+					<view class="rounded-circle flex justify-center align-center bg-danger"
+						style="width: 70rpx;height: 70rpx;">
+						<text class="text-white font-sm">100</text>
+					</view>
+				</view>
+			</view>
+			<view class="bg-primary" style="height: 80rpx;"></view>
+			<view class="" style="height: 500rpx;">
+				<view class="bg-success" style="width: 520rpx;height: 500rpx;"></view>
+			</view>
+		</view>
+
+		<!-- 弹幕部分 -->
+		<view class="position-fixed left-0 right-0 bg-warning" style="bottom: 120rpx;height: 300rpx;width: 520rpx;">
+		</view>
+
+		<!-- 底部 -->
+		<view class="position-fixed left-0 right-0 bottom-0 bg-danger" style="height: 120rpx;"></view>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				pullUrl: 'https://www.eyuai.com/upload/d1fee065-2f37-4e08-be45-d0a27e0cc0c5/newsvido/0c45ae07-5da1-4046-b4f6-8de4cbbbfded.mp4',
+				statusBarH: 0
+			}
+		},
+		onLoad() {
+			this.statusBarH = uni.getSystemInfoSync().statusBarHeight
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+<style>
+	.page {
+		flex: 1;
+	}
+</style>
