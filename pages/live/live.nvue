@@ -53,7 +53,27 @@
 		</view>
 
 		<!-- 底部 -->
-		<view class="position-fixed left-0 right-0 bottom-0 bg-danger" style="height: 120rpx;"></view>
+		<view class="position-fixed left-0 right-0 bottom-0 flex align-center justify-between" style="height: 120rpx;">
+			<view class="px-2">
+				<view class="px-3 btn">
+					<text class="text-white font">说点什么...</text>
+				</view>
+			</view>
+			<view class="flex align-center">
+				<view class="btn mr-2" style="width: 80rpx;">
+					<text class="iconfont text-white" style="font-size: 40px;">&#xe633;</text>
+				</view>
+				<view class="btn mr-2 bg-warning" style="width: 80rpx;">
+					<text class="iconfont">&#xe67c;</text>
+				</view>
+				<view class="btn mr-2" style="width: 80rpx;">
+					<text class="iconfont text-white">&#xe7cd;</text>
+				</view>
+				<view class="btn mr-2" style="width: 80rpx;">
+					<text class="iconfont text-white">&#xe607;</text>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -94,5 +114,13 @@
 <style>
 	.page {
 		flex: 1;
+	}
+
+	.btn {
+		height: 80rpx;
+		border-radius: 100rpx;
+		background-color: rgba(255, 255, 255, .12);
+		align-items: center;
+		justify-content: center;
 	}
 </style>
