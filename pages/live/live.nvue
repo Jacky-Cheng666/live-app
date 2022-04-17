@@ -62,7 +62,7 @@
 				<view class="btn mr-2" style="width: 80rpx;">
 					<text class="iconfont text-white" style="font-size: 40px;">&#xe633;</text>
 				</view>
-				<view class="btn mr-2 bg-warning" style="width: 80rpx;">
+				<view class="btn mr-2 bg-warning" style="width: 80rpx;" @tap="openGift">
 					<text class="iconfont">&#xe67c;</text>
 				</view>
 				<view class="btn mr-2" style="width: 80rpx;">
@@ -85,12 +85,53 @@
 				</view>
 			</view>
 		</uni-popup>
+
+		<!-- 送出礼物弹出层 -->
+		<uni-popup ref="giftPopup" type="bottom">
+			<view class="bg-white" style="height: 550rpx;">
+				<view class="flex align-center justify-between" style="height: 100rpx">
+					<text class="text-main font-md ml-3">礼物</text>
+					<view class="flex align-center justify-center" style="width: 100rpx;height: 100rpx"
+						@tap="closeGift">
+						<text class="iconfont text-main">&#xe607;</text>
+					</view>
+				</view>
+
+				<swiper class="border-top border-bottom" style="height: 350rpx" :indicator-dots="true" :autoplay="false"
+					:duration="500">
+					<swiper-item>
+						<view class="flex flex-wrap">
+							<view class="flex flex-column justify-center align-center border-main"
+								:class="giftActiveId===item.id?'border':''" style="width: 187.5rpx;height: 175rpx;"
+								v-for="(item,index) in gifts" :key="index" @click="giftActiveId = item.id">
+								<image :src="item.image" style="width: 100rpx;height: 100rpx;"></image>
+								<view class="flex mt-1">
+									<text class="text-warning font">{{item.name}}</text>
+									<text class="text-secondary font ml-1">{{item.coin}}</text>
+								</view>
+							</view>
+						</view>
+					</swiper-item>
+
+				</swiper>
+
+				<view class="flex align-center justify-end" style="height: 100rpx">
+					<view class="bg-warning flex align-center justify-center mr-3 rounded">
+						<text class="font px-3 py-2">充值</text>
+					</view>
+					<view class="bg-main flex align-center justify-center mr-3 rounded" @click="sendGift">
+						<text class="font text-white px-3 py-2">发送</text>
+					</view>
+				</view>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
 <script>
 	import fGift from '@/components/live/f-gift.vue'
 	import fDanmu from '@/components/live/f-danmu.vue'
+	import demoGifts from '@/demo/gifts.js'
 	export default {
 		components: {
 			fGift,
@@ -100,24 +141,28 @@
 			return {
 				pullUrl: 'https://www.eyuai.com/upload/d1fee065-2f37-4e08-be45-d0a27e0cc0c5/newsvido/0c45ae07-5da1-4046-b4f6-8de4cbbbfded.mp4',
 				statusBarH: 0,
-				content: ""
+				content: "",
+				gifts: [],
+				giftActiveId: 0
 			}
 		},
 		onLoad() {
 			this.statusBarH = uni.getSystemInfoSync().statusBarHeight
-
+			// 演示数据
+			this.gifts = demoGifts
 		},
 		onReady() {
+			this.$refs.giftPopup.open()
 			// 送礼物演示
-			setInterval(() => {
-				this.$refs.gift.send({
-					username: "池大为",
-					avatar: "",
-					gift_name: "豪华游艇",
-					gift_image: "/static/gift/3.png",
-					num: 9
-				})
-			}, 3000)
+			// setInterval(() => {
+			// 	this.$refs.gift.send({
+			// 		username: "池大为",
+			// 		avatar: "",
+			// 		gift_name: "豪华游艇",
+			// 		gift_image: "/static/gift/3.png",
+			// 		num: 9
+			// 	})
+			// }, 3000)
 
 			// 发送弹幕演示
 			let id = 1
@@ -148,6 +193,32 @@
 				uni.navigateBack({
 					delta: 1
 				})
+			},
+			openGift() {
+				this.$refs.giftPopup.open()
+			},
+			closeGift() {
+				this.$refs.giftPopup.close()
+			},
+			// 发送礼物
+			sendGift() {
+				if (this.giftActiveId === 0) {
+					return uni.showToast({
+						title: '请选择一个礼物吧',
+						icon: 'none'
+					});
+				}
+				let index = this.gifts.findIndex(v => v.id === this.giftActiveId)
+				if (index === -1) return
+				let item = this.gifts[index]
+				this.$refs.gift.send({
+					username: "池大为",
+					avatar: "",
+					gift_name: item.name,
+					gift_image: item.image,
+					num: 1
+				})
+				this.closeGift()
 			}
 		}
 	}
