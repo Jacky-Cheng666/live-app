@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<!-- <video class="flex-1" :src="pullUrl" autoplay :controls="false"></video> -->
+		<video class="flex-1" :src="pullUrl" autoplay :controls="false"></video>
 
 		<!-- 上部分 -->
 		<view class="position-fixed left-0 right-0" :style="`top: ${statusBarH}`">
@@ -59,7 +59,7 @@
 				</view>
 			</view>
 			<view class="flex align-center">
-				<view class="btn mr-2" style="width: 80rpx;">
+				<view class="btn mr-2" style="width: 80rpx;" @tap="openCoin">
 					<text class="iconfont text-white" style="font-size: 40px;">&#xe633;</text>
 				</view>
 				<view class="btn mr-2 bg-warning" style="width: 80rpx;" @tap="openGift">
@@ -116,7 +116,7 @@
 				</swiper>
 
 				<view class="flex align-center justify-end" style="height: 100rpx">
-					<view class="bg-warning flex align-center justify-center mr-3 rounded">
+					<view class="bg-warning flex align-center justify-center mr-3 rounded" @tap="openCoin">
 						<text class="font px-3 py-2">充值</text>
 					</view>
 					<view class="bg-main flex align-center justify-center mr-3 rounded" @click="sendGift">
@@ -152,7 +152,6 @@
 			this.gifts = demoGifts
 		},
 		onReady() {
-			this.$refs.giftPopup.open()
 			// 送礼物演示
 			// setInterval(() => {
 			// 	this.$refs.gift.send({
@@ -219,6 +218,11 @@
 					num: 1
 				})
 				this.closeGift()
+			},
+			openCoin() {
+				uni.navigateTo({
+					url: '/pages/coin/coin'
+				})
 			}
 		}
 	}
