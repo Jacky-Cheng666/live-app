@@ -1,6 +1,6 @@
 <template>
 	<view class="position-fixed left-0 right-0" style="bottom: 120rpx;height: 300rpx;width: 520rpx;">
-		<scroll-view class="pl-3" scroll-y="true" scroll-with-animation :scroll-into-view="scrollInToView"
+		<scroll-view :show-scrollbar="false" class="pl-3" scroll-y="true" scroll-with-animation :scroll-into-view="scrollInToView"
 			style="height: 300rpx;width: 520rpx;">
 			<view :id="`danmu${item.id}`" class="flex align-center p-2 rounded mb-2"
 				style="background-color: rgba(255,255,255,.125);box-sizing: border-box;" v-for="(item,index) in list"
