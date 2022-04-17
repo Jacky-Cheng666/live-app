@@ -23,7 +23,8 @@
 					<text class="iconfont text-white mb-1">&#xe605;</text>
 					<text class="text-white font">翻转</text>
 				</view>
-				<view class="flex flex-column justify-center align-center" style="height: 120rpx">
+				<view class="flex flex-column justify-center align-center" style="height: 120rpx"
+					@tap="openPopup('mode')">
 					<text class="iconfont text-white mb-1">&#xe60c;</text>
 					<text class="text-white font">画质</text>
 				</view>
@@ -43,6 +44,22 @@
 			style="left: 100rpx;right: 100rpx;bottom: 100rpx;height: 120rpx">
 			<text class="text-white">开始视频直播</text>
 		</view>
+
+
+		<!-- 修改画质 -->
+		<uni-popup ref="popup" type="bottom">
+			<view class="bg-white">
+				<view class="flex align-center justify-center border-bottom" style="height: 90rpx;">
+					<text class="font-md">提示</text>
+				</view>
+				<view class="">内容区域</view>
+				<view class="f-divider"></view>
+				<view class="flex align-center justify-center" hover-class="bg-light" style="height: 90rpx;">
+					<text class="font-md">取消</text>
+				</view>
+			</view>
+		</uni-popup>
+
 	</view>
 </template>
 
@@ -70,6 +87,8 @@
 			// 注意：需要在onReady中 或 onLoad 延时
 			this.context = uni.createLivePusherContext("livePusher", this);
 			this.startPreview()
+
+			this.$refs.popup.open()
 		},
 		methods: {
 			// 开启预览
@@ -98,7 +117,11 @@
 						this.position = this.position === 'back' ? 'front' : 'back'
 					}
 				})
+			},
+			openPopup() {
+				this.$refs.popup.open()
 			}
+
 		}
 	}
 </script>
