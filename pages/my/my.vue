@@ -1,14 +1,56 @@
 <template>
 	<view>
-		个人中心
+		<view class="flex align-center">
+			<view class="flex align-center justify-center" style="width: 180rpx;height: 180rpx;">
+				<image class="rounded-circle" src="/static/gift/2.png" style="width: 105rpx;height: 105rpx;"></image>
+			</view>
+			<view class="flex flex-column">
+				<text class="font-md">池大为</text>
+				<text class="font text-muted">这是迈松</text>
+			</view>
+			<view class="ml-auto border p-2 border-main rounded mr-3" hover-class="bg-light">
+				<text class="text-main font">编辑资料</text>
+			</view>
+		</view>
+		<view class="f-divider"></view>
+
+		<f-list :options="list"></f-list>
 	</view>
 </template>
 
 <script>
+	import fList from '@/components/common/f-list.vue'
 	export default {
+		components: {
+			fList
+		},
 		data() {
 			return {
-
+				list: [{
+						icon: 'iconfaxian',
+						title: '我的金币',
+						desc: '50金币 点击充值',
+						showArrow: false
+					},
+					{
+						icon: 'iconfaxian',
+						title: '我的直播',
+						desc: '0',
+						showArrow: true
+					},
+					{
+						icon: 'iconfaxian',
+						title: '我的关注',
+						desc: '0',
+						showArrow: true
+					},
+					{
+						icon: 'iconfaxian',
+						title: '历史记录',
+						desc: '',
+						showArrow: true
+					}
+				]
 			}
 		},
 		methods: {
