@@ -28,11 +28,13 @@
 					<text class="iconfont text-white mb-1">&#xe60c;</text>
 					<text class="text-white font">画质</text>
 				</view>
-				<view class="flex flex-column justify-center align-center" style="height: 120rpx">
+				<view class="flex flex-column justify-center align-center" style="height: 120rpx"
+					@tap="openPopup('beauty')">
 					<text class="iconfont text-white mb-1">&#xe632;</text>
 					<text class="text-white font">美颜</text>
 				</view>
-				<view class="flex flex-column justify-center align-center" style="height: 120rpx">
+				<view class="flex flex-column justify-center align-center" style="height: 120rpx"
+					@tap="openPopup('whiteness')">
 					<text class="iconfont text-white mb-1">&#xe631;</text>
 					<text class="text-white font">美白</text>
 				</view>
@@ -46,15 +48,33 @@
 		</view>
 
 
-		<!-- 修改画质 -->
+		<!-- 修改直播参数弹出层 -->
 		<uni-popup ref="popup" type="bottom">
 			<view class="bg-white">
 				<view class="flex align-center justify-center border-bottom" style="height: 90rpx;">
-					<text class="font-md">提示</text>
+					<text class="font-md">{{popTitle}}</text>
 				</view>
-				<view class="">内容区域</view>
+				<!-- 画质选择 -->
+				<view v-if="popupType === 'mode'">
+					<view class="flex justify-center align-center py-2" :class="mode===item.type?'bg-main':''"
+						v-for="(item,index) in modeList" :key="index" @tap="chooseMode(item)">
+						<text class="font-md" :class="mode===item.type?'text-white':''">{{item.desc}}</text>
+					</view>
+				</view>
+				<!-- 美颜选择 -->
+				<view class="px-2" v-else-if="popupType==='beauty'">
+					<slider :min="0" :max="9" :step="1" :value="beauty" show-value :block-size="18"
+						block-color="#0094ff" @change="handleSliderChange"></slider>
+				</view>
+				<!-- 美白选择 -->
+				<view class="px-2" v-else-if="popupType==='whiteness'">
+					<slider :min="0" :max="9" :step="1" :value="whiteness" show-value :block-size="18"
+						block-color="#0094ff" @change="handleSliderChange"></slider>
+				</view>
+
 				<view class="f-divider"></view>
-				<view class="flex align-center justify-center" hover-class="bg-light" style="height: 90rpx;">
+				<view class="flex align-center justify-center" hover-class="bg-light" style="height: 90rpx;"
+					@tap="$refs.popup.close()">
 					<text class="font-md">取消</text>
 				</view>
 			</view>
@@ -76,6 +96,17 @@
 				windowHeight: 0,
 				context: null,
 				statusBarHeight: 0,
+				popupType: "mode",
+				modeList: [{
+					type: "SD",
+					desc: "标清"
+				}, {
+					type: "HD",
+					desc: "高清"
+				}, {
+					type: "FHD",
+					desc: "超清"
+				}]
 			}
 		},
 		onLoad() {
@@ -83,12 +114,22 @@
 			this.windowHeight = res.windowHeight
 			this.statusBarHeight = res.statusBarHeight
 		},
+		computed: {
+			popTitle() {
+				let o = {
+					mode: "画质",
+					beauty: "美颜",
+					whiteness: "美白"
+				}
+				return o[this.popupType]
+			}
+		},
 		onReady() {
 			// 注意：需要在onReady中 或 onLoad 延时
 			this.context = uni.createLivePusherContext("livePusher", this);
-			this.startPreview()
+			// 开启预览
+			// this.startPreview()
 
-			this.$refs.popup.open()
 		},
 		methods: {
 			// 开启预览
@@ -118,10 +159,25 @@
 					}
 				})
 			},
-			openPopup() {
+			openPopup(type) {
+				this.popupType = type
 				this.$refs.popup.open()
+			},
+			// 画质选择
+			chooseMode(item) {
+				this.mode = item.type
+				uni.showToast({
+					title: `画质切换为${item.desc}`,
+					icon: 'none'
+				});
+				this.$refs.popup.close()
+			},
+			// 改变美颜
+			handleSliderChange(e) {
+				this[this.popupType] = e.detail.value
+				console.log('beauty', this.beauty)
+				console.log('whiteness', this.whiteness)
 			}
-
 		}
 	}
 </script>
