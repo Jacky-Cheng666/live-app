@@ -4,47 +4,50 @@
 			:enable-camera="enableCamera" :auto-focus="true" :device-position="position" :beauty="beauty"
 			:whiteness="whiteness" aspect="9:16" @statechange="statechange" @netstatus="netstatus" @error="error"
 			:style="'height: '+windowHeight+'px;'" style="width: 750rpx;"></live-pusher>
-		<view class="position-fixed left-0 right-0 flex" :style="`top: ${statusBarHeight}px`">
-			<view class="flex justify-center align-center" style="width: 90rpx;height: 90rpx;">
-				<text class="iconfont text-white">&#xe607;</text>
+		<view v-if="showBars">
+			<view class="position-fixed left-0 right-0 flex" :style="`top: ${statusBarHeight}px`">
+				<view class="flex justify-center align-center" style="width: 90rpx;height: 90rpx;">
+					<text class="iconfont text-white">&#xe607;</text>
+				</view>
+				<view class="flex-1 p-2 flex align-center" style="height: 160rpx;background-color: rgba(0,0,0,.2);">
+					<view class="bg-white rounded position-relative" style="width: 120rpx;height: 120rpx;">
+						<image class="" src="/static/gift/4.png" style="width: 120rpx;height: 120rpx;"></image>
+						<text class="text-white position-absolute left-0 right-0 bottom-0 font">更换封面</text>
+					</view>
+					<view class="flex-1 ml-2">
+						<input class="mb-2" type="text" placeholder="请输入直播标题" />
+						<text class="text-white font">#选择分类</text>
+					</view>
+				</view>
+				<view class="" style="width: 100rpx;">
+					<view class="flex flex-column justify-center align-center" style="height: 120rpx"
+						@tap="switchCarema">
+						<text class="iconfont text-white mb-1">&#xe605;</text>
+						<text class="text-white font">翻转</text>
+					</view>
+					<view class="flex flex-column justify-center align-center" style="height: 120rpx"
+						@tap="openPopup('mode')">
+						<text class="iconfont text-white mb-1">&#xe60c;</text>
+						<text class="text-white font">画质</text>
+					</view>
+					<view class="flex flex-column justify-center align-center" style="height: 120rpx"
+						@tap="openPopup('beauty')">
+						<text class="iconfont text-white mb-1">&#xe632;</text>
+						<text class="text-white font">美颜</text>
+					</view>
+					<view class="flex flex-column justify-center align-center" style="height: 120rpx"
+						@tap="openPopup('whiteness')">
+						<text class="iconfont text-white mb-1">&#xe631;</text>
+						<text class="text-white font">美白</text>
+					</view>
+				</view>
 			</view>
-			<view class="flex-1 p-2 flex align-center" style="height: 160rpx;background-color: rgba(0,0,0,.2);">
-				<view class="bg-white rounded position-relative" style="width: 120rpx;height: 120rpx;">
-					<image class="" src="/static/gift/4.png" style="width: 120rpx;height: 120rpx;"></image>
-					<text class="text-white position-absolute left-0 right-0 bottom-0 font">更换封面</text>
-				</view>
-				<view class="flex-1 ml-2">
-					<input class="mb-2" type="text" placeholder="请输入直播标题" />
-					<text class="text-white font">#选择分类</text>
-				</view>
-			</view>
-			<view class="" style="width: 100rpx;">
-				<view class="flex flex-column justify-center align-center" style="height: 120rpx" @tap="switchCarema">
-					<text class="iconfont text-white mb-1">&#xe605;</text>
-					<text class="text-white font">翻转</text>
-				</view>
-				<view class="flex flex-column justify-center align-center" style="height: 120rpx"
-					@tap="openPopup('mode')">
-					<text class="iconfont text-white mb-1">&#xe60c;</text>
-					<text class="text-white font">画质</text>
-				</view>
-				<view class="flex flex-column justify-center align-center" style="height: 120rpx"
-					@tap="openPopup('beauty')">
-					<text class="iconfont text-white mb-1">&#xe632;</text>
-					<text class="text-white font">美颜</text>
-				</view>
-				<view class="flex flex-column justify-center align-center" style="height: 120rpx"
-					@tap="openPopup('whiteness')">
-					<text class="iconfont text-white mb-1">&#xe631;</text>
-					<text class="text-white font">美白</text>
-				</view>
-			</view>
-		</view>
 
-		<!-- 开始直播按钮 -->
-		<view class="position-fixed bg-main flex justify-center align-center rounded-circle"
-			style="left: 100rpx;right: 100rpx;bottom: 100rpx;height: 120rpx">
-			<text class="text-white">开始视频直播</text>
+			<!-- 开始直播按钮 -->
+			<view class="position-fixed bg-main flex justify-center align-center rounded-circle"
+				style="left: 100rpx;right: 100rpx;bottom: 100rpx;height: 120rpx">
+				<text class="text-white">开始视频直播</text>
+			</view>
 		</view>
 
 
@@ -106,13 +109,17 @@
 				}, {
 					type: "FHD",
 					desc: "超清"
-				}]
+				}],
+				showBars: true
 			}
 		},
 		onLoad() {
 			let res = uni.getSystemInfoSync()
 			this.windowHeight = res.windowHeight
 			this.statusBarHeight = res.statusBarHeight
+		},
+		onBackPress() {
+			this.showBars = false
 		},
 		computed: {
 			popTitle() {
@@ -128,7 +135,7 @@
 			// 注意：需要在onReady中 或 onLoad 延时
 			this.context = uni.createLivePusherContext("livePusher", this);
 			// 开启预览
-			// this.startPreview()
+			this.startPreview()
 
 		},
 		methods: {
@@ -175,8 +182,6 @@
 			// 改变美颜
 			handleSliderChange(e) {
 				this[this.popupType] = e.detail.value
-				console.log('beauty', this.beauty)
-				console.log('whiteness', this.whiteness)
 			}
 		}
 	}
