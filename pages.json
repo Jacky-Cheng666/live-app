@@ -43,6 +43,16 @@
 				}
 			}
 
+		}, {
+			"path": "pages/create-live/create-live",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+
 		}
 	],
 	"globalStyle": {

@@ -11,7 +11,10 @@
 			});
 			// 监听点击底部中间凸起按钮
 			uni.onTabBarMidButtonTap(() => {
-				console.log('点击了中间按钮')
+
+				uni.navigateTo({
+					url: '/pages/create-live/create-live'
+				})
 			})
 		},
 		onShow: function() {

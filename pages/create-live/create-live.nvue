@@ -1,0 +1,108 @@
+<template>
+	<view class="flex-1">
+		<live-pusher id='livePusher' ref="livePusher" class="livePusher flex-1" :url="url" :mode="mode"
+			:enable-camera="enableCamera" :auto-focus="true" :device-position="position" :beauty="beauty"
+			:whiteness="whiteness" aspect="9:16" @statechange="statechange" @netstatus="netstatus" @error="error"
+			:style="'height: '+windowHeight+'px;'" style="width: 750rpx;"></live-pusher>
+		<view class="position-fixed left-0 right-0 flex" :style="`top: ${statusBarHeight}px`">
+			<view class="flex justify-center align-center" style="width: 90rpx;height: 90rpx;">
+				<text class="iconfont text-white">&#xe607;</text>
+			</view>
+			<view class="flex-1 p-2 flex align-center" style="height: 160rpx;background-color: rgba(0,0,0,.2);">
+				<view class="bg-white rounded position-relative" style="width: 120rpx;height: 120rpx;">
+					<image class="" src="/static/gift/4.png" style="width: 120rpx;height: 120rpx;"></image>
+					<text class="text-white position-absolute left-0 right-0 bottom-0 font">更换封面</text>
+				</view>
+				<view class="flex-1 ml-2">
+					<input class="mb-2" type="text" placeholder="请输入直播标题" />
+					<text class="text-white font">#选择分类</text>
+				</view>
+			</view>
+			<view class="" style="width: 100rpx;">
+				<view class="flex flex-column justify-center align-center" style="height: 120rpx" @tap="switchCarema">
+					<text class="iconfont text-white mb-1">&#xe605;</text>
+					<text class="text-white font">翻转</text>
+				</view>
+				<view class="flex flex-column justify-center align-center" style="height: 120rpx">
+					<text class="iconfont text-white mb-1">&#xe60c;</text>
+					<text class="text-white font">画质</text>
+				</view>
+				<view class="flex flex-column justify-center align-center" style="height: 120rpx">
+					<text class="iconfont text-white mb-1">&#xe632;</text>
+					<text class="text-white font">美颜</text>
+				</view>
+				<view class="flex flex-column justify-center align-center" style="height: 120rpx">
+					<text class="iconfont text-white mb-1">&#xe631;</text>
+					<text class="text-white font">美白</text>
+				</view>
+			</view>
+		</view>
+
+		<!-- 开始直播按钮 -->
+		<view class="position-fixed bg-main flex justify-center align-center rounded-circle"
+			style="left: 100rpx;right: 100rpx;bottom: 100rpx;height: 120rpx">
+			<text class="text-white">开始视频直播</text>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				url: "",
+				mode: "SD",
+				enableCamera: true,
+				position: "front",
+				beauty: 0,
+				whiteness: 0,
+				windowHeight: 0,
+				context: null,
+				statusBarHeight: 0,
+			}
+		},
+		onLoad() {
+			let res = uni.getSystemInfoSync()
+			this.windowHeight = res.windowHeight
+			this.statusBarHeight = res.statusBarHeight
+		},
+		onReady() {
+			// 注意：需要在onReady中 或 onLoad 延时
+			this.context = uni.createLivePusherContext("livePusher", this);
+			this.startPreview()
+		},
+		methods: {
+			// 开启预览
+			startPreview() {
+				this.context.startPreview({
+					success: (e) => {
+						console.log('preview', e)
+					}
+				})
+			},
+			// 直播状态变化
+			statechange(e) {
+				console.log('statechange', e)
+			},
+			// 直播网络变化
+			netstatus(e) {
+				console.log('netstatus', e)
+			},
+			// 监听错误
+			error(e) {
+				console.log('error', e)
+			},
+			switchCarema() {
+				this.context.switchCamera({
+					success: () => {
+						this.position = this.position === 'back' ? 'front' : 'back'
+					}
+				})
+			}
+		}
+	}
+</script>
+
+<style>
+
+</style>
