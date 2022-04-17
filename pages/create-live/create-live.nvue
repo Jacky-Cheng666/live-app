@@ -45,7 +45,7 @@
 
 			<!-- 开始直播按钮 -->
 			<view class="position-fixed bg-main flex justify-center align-center rounded-circle"
-				style="left: 100rpx;right: 100rpx;bottom: 100rpx;height: 120rpx">
+				style="left: 100rpx;right: 100rpx;bottom: 100rpx;height: 120rpx" @tap="openLiveRoom">
 				<text class="text-white">开始视频直播</text>
 			</view>
 		</view>
@@ -182,6 +182,16 @@
 			// 改变美颜
 			handleSliderChange(e) {
 				this[this.popupType] = e.detail.value
+			},
+			openLiveRoom() {
+				uni.navigateTo({
+					url: '/pages/live-room/live-room?options=' + JSON.stringify({
+						mode: this.mode,
+						position: this.position,
+						beauty: this.beauty,
+						whiteness: this.whiteness,
+					})
+				})
 			}
 		}
 	}
