@@ -176,7 +176,10 @@
 		},
 		methods: {
 			openInput() {
-				this.$refs.input.open()
+				this.$authMethod(() => {
+					this.$refs.input.open()
+				})
+
 			},
 			submit() {
 				if (this.content.length === 0) return

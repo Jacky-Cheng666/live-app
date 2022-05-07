@@ -6,6 +6,33 @@ import $H from './common/request.js'
 import Vue from 'vue'
 Vue.prototype.$H = $H
 Vue.prototype.$store = store
+// 页面权限验证
+Vue.prototype.$authJump = (options) => {
+	if (!store.state.token) {
+		uni.showToast({
+			title: '请先登录',
+			icon: 'none'
+		});
+		return uni.navigateTo({
+			url: '/pages/login/login'
+		})
+	}
+	uni.navigateTo(options)
+}
+// 方法权限验证
+Vue.prototype.$authMethod = (callback) => {
+	if (!store.state.token) {
+		uni.showToast({
+			title: '请先登录',
+			icon: 'none'
+		});
+		return uni.navigateTo({
+			url: '/pages/login/login'
+		})
+	}
+	callback()
+}
+
 Vue.config.productionTip = false
 App.mpType = 'app'
 const app = new Vue({

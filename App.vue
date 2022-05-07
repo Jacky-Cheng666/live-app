@@ -11,8 +11,7 @@
 			});
 			// 监听点击底部中间凸起按钮
 			uni.onTabBarMidButtonTap(() => {
-
-				uni.navigateTo({
+				this.$authJump({
 					url: '/pages/create-live/create-live'
 				})
 			})

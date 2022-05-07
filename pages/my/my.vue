@@ -78,7 +78,7 @@
 			this.$store.dispatch('getUserInfo')
 		},
 		onNavigationBarButtonTap() {
-			uni.navigateTo({
+			this.$authJump({
 				url: '/pages/user-set/user-set'
 			})
 		},
