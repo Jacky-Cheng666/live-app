@@ -1,18 +1,19 @@
 <template>
 	<view>
-		<!-- <view class="flex align-center">
+		<view v-if="user" class="flex align-center">
 			<view class="flex align-center justify-center" style="width: 180rpx;height: 180rpx;">
-				<image class="rounded-circle" src="/static/gift/2.png" style="width: 105rpx;height: 105rpx;"></image>
+				<image class="rounded-circle" :src="user.avatar || '/static/gift/2.png'"
+					style="width: 105rpx;height: 105rpx;"></image>
 			</view>
 			<view class="flex flex-column">
-				<text class="font-md">池大为</text>
-				<text class="font text-muted">这是迈松</text>
+				<text class="font-md">{{user.username}}</text>
+				<text class="font text-muted">未添加个性签名</text>
 			</view>
 			<view class="ml-auto border p-2 border-main rounded mr-3" hover-class="bg-light">
 				<text class="text-main font">编辑资料</text>
 			</view>
-		</view> -->
-		<view class="flex align-center">
+		</view>
+		<view v-else class="flex align-center">
 			<view class="flex align-center justify-center" style="width: 180rpx;height: 180rpx;">
 				<image class="rounded-circle" src="/static/gift/2.png" style="width: 105rpx;height: 105rpx;"></image>
 			</view>
@@ -32,6 +33,9 @@
 
 <script>
 	import fList from '@/components/common/f-list.vue'
+	import {
+		mapState
+	} from 'vuex'
 	export default {
 		components: {
 			fList
@@ -64,6 +68,19 @@
 					}
 				]
 			}
+		},
+		computed: {
+			...mapState({
+				user: state => state.user
+			})
+		},
+		onShow() {
+			this.$store.dispatch('getUserInfo')
+		},
+		onNavigationBarButtonTap() {
+			uni.navigateTo({
+				url: '/pages/user-set/user-set'
+			})
 		},
 		methods: {
 			openLogin() {

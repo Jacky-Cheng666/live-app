@@ -16,6 +16,8 @@
 					url: '/pages/create-live/create-live'
 				})
 			})
+			// 初始化用户数据
+			this.$store.dispatch('initUser')
 		},
 		onShow: function() {
 			console.log('App Show')

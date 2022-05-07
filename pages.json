@@ -18,7 +18,18 @@
 			"path": "pages/my/my",
 			"style": {
 				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"titleText": "个人中心",
+						"titleAlign": "left",
+						"buttons": [{
+							"type": "menu",
+							"float": "right"
+						}]
+					}
+				}
 			}
 
 		}, {
@@ -72,6 +83,13 @@
 				"app-plus": {
 					"bounce": "none"
 				}
+			}
+
+		}, {
+			"path": "pages/user-set/user-set",
+			"style": {
+				"navigationBarTitleText": "我的设置",
+				"enablePullDownRefresh": false
 			}
 
 		}
