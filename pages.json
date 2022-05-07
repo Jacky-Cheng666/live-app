@@ -63,6 +63,17 @@
 				}
 			}
 
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录注册",
+				"enablePullDownRefresh": false,
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+
 		}
 	],
 	"globalStyle": {

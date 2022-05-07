@@ -139,7 +139,7 @@
 		},
 		data() {
 			return {
-				pullUrl: 'https://www.eyuai.com/upload/d1fee065-2f37-4e08-be45-d0a27e0cc0c5/newsvido/0c45ae07-5da1-4046-b4f6-8de4cbbbfded.mp4',
+				pullUrl: 'http://192.168.1.206:23481/live/ndQg3lp03AnKNDeugIUx.flv?sign=1651987917-2c3e3a777f6bc717fe91c8b1f5020e23',
 				statusBarH: 0,
 				content: "",
 				gifts: [],

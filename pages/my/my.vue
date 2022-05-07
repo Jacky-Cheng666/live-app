@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="flex align-center">
+		<!-- <view class="flex align-center">
 			<view class="flex align-center justify-center" style="width: 180rpx;height: 180rpx;">
 				<image class="rounded-circle" src="/static/gift/2.png" style="width: 105rpx;height: 105rpx;"></image>
 			</view>
@@ -10,6 +10,18 @@
 			</view>
 			<view class="ml-auto border p-2 border-main rounded mr-3" hover-class="bg-light">
 				<text class="text-main font">编辑资料</text>
+			</view>
+		</view> -->
+		<view class="flex align-center">
+			<view class="flex align-center justify-center" style="width: 180rpx;height: 180rpx;">
+				<image class="rounded-circle" src="/static/gift/2.png" style="width: 105rpx;height: 105rpx;"></image>
+			</view>
+			<view class="flex flex-column">
+				<text class="font-md">未登录</text>
+				<text class="font text-muted">登录体验更多功能</text>
+			</view>
+			<view class="ml-auto border p-2 border-main rounded mr-3" hover-class="bg-light" @tap="openLogin">
+				<text class="text-main font">立即登录</text>
 			</view>
 		</view>
 		<view class="f-divider"></view>
@@ -54,7 +66,11 @@
 			}
 		},
 		methods: {
-
+			openLogin() {
+				uni.navigateTo({
+					url: '/pages/login/login'
+				})
+			}
 		}
 	}
 </script>
