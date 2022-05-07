@@ -19,19 +19,6 @@ Vue.prototype.$authJump = (options) => {
 	}
 	uni.navigateTo(options)
 }
-// 方法权限验证
-Vue.prototype.$authMethod = (callback) => {
-	if (!store.state.token) {
-		uni.showToast({
-			title: '请先登录',
-			icon: 'none'
-		});
-		return uni.navigateTo({
-			url: '/pages/login/login'
-		})
-	}
-	callback()
-}
 
 Vue.config.productionTip = false
 App.mpType = 'app'

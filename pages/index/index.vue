@@ -13,29 +13,36 @@
 
 		<!-- 直播列表 -->
 		<view class="flex flex-wrap">
-			<view class="p position-relative list-item" v-for="i in 20" :key="i" @tap="openLive">
-				<image class="rounded" src="/static/demo/1.jpg" mode="aspectFill" style="width: 365rpx;height: 365rpx;">
+			<view class="p position-relative list-item" v-for="(item,index) in list" :key="index" @tap="openLive">
+				<image class="rounded" src="/static/demo/1.jpg" mode="aspectFill"
+					style="width: 365rpx;height: 365rpx;">
 				</image>
 				<view class="rounded-circle position-absolute px-2 flex align-center"
 					style="left: 15rpx;top: 15rpx;background-color: rgba(0,0,0,.4);">
 					<text class="iconfont iconbizhongguanli text-warning mr-1"></text>
-					<text class="text-white font">0</text>
+					<text class="text-white font">{{item.coin}}</text>
 				</view>
 				<view class="rounded-circle position-absolute px-2 flex align-center"
 					style="right: 15rpx;top: 15rpx;background-color: rgba(0,0,0,.4);">
 					<text class="text-white font-sm mr-1">人气:</text>
-					<text class="text-white font-sm">1</text>
+					<text class="text-white font-sm">{{item.look_count}}</text>
 				</view>
 				<view class="rounded-circle position-absolute flex align-center" style="left: 15rpx;bottom: 15rpx;">
-					<text class="text-white font-sm">标题</text>
+					<text class="text-white font-sm">{{item.title}}</text>
 				</view>
 				<view class="rounded-circle position-absolute px-2 flex align-center"
 					style="right: 15rpx;bottom: 15rpx;background-color: rgba(0,0,0,.4);">
-					<text class="d-block bg-danger rounded-circle mr-1" style="width: 20rpx;height: 20rpx;"></text>
-					<text class="text-white font-sm">已结束</text>
+					<text class="d-block rounded-circle mr-1" :class="item.status===1?'bg-success':'bg-danger'"
+						style="width: 20rpx;height: 20rpx;"></text>
+					<text class="text-white font-sm">{{item.status | formatStatus}}</text>
 				</view>
 			</view>
+		</view>
 
+		<!-- 没有更多了 -->
+		<view class="f-divider"></view>
+		<view class="flex align-center justify-center py-3">
+			<text class="font-md text-secondary">{{loadText}}</text>
 		</view>
 	</view>
 </template>
@@ -44,13 +51,53 @@
 	export default {
 		data() {
 			return {
-
+				list: [],
+				page: 1, //列表当前页码
+				loadText: "上拉加载更多"
 			}
 		},
 		onLoad() {
-
+			this.getData()
+		},
+		onReachBottom() {
+			if (this.loadText !== '上拉加载更多') return
+			this.loadText = '加载中...'
+			this.page++
+			this.getData()
+		},
+		onPullDownRefresh() {
+			this.page = 1
+			this.getData(() => {
+				uni.stopPullDownRefresh()
+				uni.showToast({
+					title: '刷新成功',
+					icon: 'none'
+				});
+			}, true)
+		},
+		filters: {
+			formatStatus(val) {
+				let o = {
+					0: "未开始",
+					1: "直播中",
+					2: "暂停",
+					3: "已结束"
+				}
+				return o[val]
+			}
 		},
 		methods: {
+			async getData(callback = false, refresh = false) {
+				let res = await this.$H.get(`/live/list/${this.page}`)
+				// console.log('res', res)
+				
+				this.list = refresh ? res : [...this.list, ...res]
+				this.loadText = res.length < 10 ? '没有更多了' : '上拉加载更多'
+
+				if (typeof callback === 'function') {
+					callback()
+				}
+			},
 			openLive() {
 				uni.navigateTo({
 					url: '/pages/live/live'

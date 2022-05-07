@@ -77,7 +77,7 @@
 		<!-- 输入框弹出层 -->
 		<uni-popup ref="input" type="bottom">
 			<view class="bg-white flex align-center px-3" style="height: 120rpx;">
-				<input class="flex-1 border rounded px-3 font-md" v-model="content" placeholder="说点什么吧" type="text"
+				<input autofocus class="flex-1 border rounded px-3 font-md" v-model="content" placeholder="说点什么吧" type="text"
 					style="height: 80rpx;">
 				<view class="flex align-center justify-center ml-3 rounded"
 					:class="content.length===0?'bg-main-disabled':'bg-main'" @tap="submit">
@@ -176,7 +176,7 @@
 		},
 		methods: {
 			openInput() {
-				this.$authMethod(() => {
+				this.$store.dispatch('authMethod', () => {
 					this.$refs.input.open()
 				})
 
