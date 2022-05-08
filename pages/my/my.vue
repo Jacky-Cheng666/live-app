@@ -27,46 +27,57 @@
 		</view>
 		<view class="f-divider"></view>
 
-		<f-list :options="list"></f-list>
+		<view class="">
+			<view class="p-3 flex align-center" hover-class="bg-light" @tap="openCoin">
+				<text class="iconfont iconfaxian mr-3"></text>
+				<text class="font-md">我的金币</text>
+				<view class="ml-auto flex align-center">
+					<text class="text-muted font">50金币 点击充值</text>
+					<text class="ml-2">></text>
+				</view>
+			</view>
+
+			<view class="p-3 flex align-center" hover-class="bg-light">
+				<text class="iconfont iconfaxian mr-3"></text>
+				<text class="font-md">我的直播</text>
+				<view class="ml-auto flex align-center">
+					<text class="text-muted font">0</text>
+					<text class="ml-2">></text>
+				</view>
+			</view>
+
+			<view class="p-3 flex align-center" hover-class="bg-light">
+				<text class="iconfont iconfaxian mr-3"></text>
+				<text class="font-md">我的关注</text>
+				<view class="ml-auto flex align-center">
+					<text class="text-muted font">0</text>
+					<text class="ml-2">></text>
+				</view>
+			</view>
+
+			<view class="p-3 flex align-center" hover-class="bg-light">
+				<text class="iconfont iconfaxian mr-3"></text>
+				<text class="font-md">历史记录</text>
+				<view class="ml-auto flex align-center">
+					<text class="text-muted font"></text>
+					<text class="ml-2">></text>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
-	import fList from '@/components/common/f-list.vue'
 	import {
 		mapState
 	} from 'vuex'
 	export default {
 		components: {
-			fList
+
 		},
 		data() {
 			return {
-				list: [{
-						icon: 'iconfaxian',
-						title: '我的金币',
-						desc: '50金币 点击充值',
-						showArrow: false
-					},
-					{
-						icon: 'iconfaxian',
-						title: '我的直播',
-						desc: '0',
-						showArrow: true
-					},
-					{
-						icon: 'iconfaxian',
-						title: '我的关注',
-						desc: '0',
-						showArrow: true
-					},
-					{
-						icon: 'iconfaxian',
-						title: '历史记录',
-						desc: '',
-						showArrow: true
-					}
-				]
+
 			}
 		},
 		computed: {
@@ -86,6 +97,11 @@
 			openLogin() {
 				uni.navigateTo({
 					url: '/pages/login/login'
+				})
+			},
+			openCoin() {
+				this.$authJump({
+					url: '/pages/coin/coin'
 				})
 			}
 		}

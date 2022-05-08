@@ -14,7 +14,8 @@
 		<!-- 直播列表 -->
 		<template v-if="list.length>0 && !loading">
 			<view class="flex flex-wrap">
-				<view class="p position-relative list-item" v-for="(item,index) in list" :key="index" @tap="openLive">
+				<view class="p position-relative list-item" v-for="(item,index) in list" :key="index"
+					@tap="openLive(item.id)">
 					<image class="rounded" src="/static/demo/1.jpg" mode="aspectFill"
 						style="width: 365rpx;height: 365rpx;">
 					</image>
@@ -116,9 +117,9 @@
 					callback()
 				}
 			},
-			openLive() {
+			openLive(id) {
 				uni.navigateTo({
-					url: '/pages/live/live'
+					url: '/pages/live/live?id=' + id
 				})
 			}
 		}
