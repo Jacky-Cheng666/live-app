@@ -135,6 +135,9 @@
 	import fDanmu from '@/components/live/f-danmu.vue'
 	import $H from '@/common/request.js'
 	import $C from '@/common/config.js'
+	import {
+		mapState
+	} from 'vuex'
 	export default {
 		components: {
 			fGift,
@@ -184,6 +187,10 @@
 			})
 		},
 		computed: {
+			...mapState({
+				socket: state => state.socket,
+				token: state => state.token
+			}),
 			pullUrl() {
 				if (this.detail.key === '' || this.sign === '') {
 					return ''
@@ -204,17 +211,29 @@
 			// }, 3000)
 
 			// 发送弹幕演示
-			let id = 1
-			setInterval(() => {
-				this.$refs.danmu.send({
-					id,
-					name: '池厅长' + id,
-					content: '听说校花俞小曼很好看'
-				})
-				id++
-			}, 3000)
+			// let id = 1
+			// setInterval(() => {
+			// 	this.$refs.danmu.send({
+			// 		id,
+			// 		name: '池厅长' + id,
+			// 		content: '听说校花俞小曼很好看'
+			// 	})
+			// 	id++
+			// }, 3000)
+			
+			// 加入直播间
+			this.joinOrLeave('join')
 		},
 		methods: {
+			// 加入或离开直播间
+			joinOrLeave(type) {
+				if (this.socket && this.token) {
+					this.socket.emit(type + 'Live', {
+						live_id: this.id,
+						token: this.token
+					})
+				}
+			},
 			openInput() {
 				this.$store.dispatch('authMethod', () => {
 					this.$refs.input.open()

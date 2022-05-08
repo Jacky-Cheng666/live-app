@@ -85,24 +85,31 @@ export default new Vuex.Store({
 			// 监听连接
 			S.on('connect', () => {
 				console.log('socket_connected')
-				// 测试推送一条消息到后端
-				S.emit('test', {
-					name: "jacky"
-				})
-				
+				state.socket = S
+				// socket.io唯一连接id，可以去监控这个id实现点对点通讯
+				const { id } = S
 				// 接收后端传过来的数据
-				S.on(S.id,(e)=>{
-					console.log('e',e)
+				S.on(id, (e) => {
+					let d = e.data
+					if(d.action==='error'){
+						let msg  = d.payload
+						return uni.showToast({
+							title: msg,
+							icon: 'none'
+						});
+					}
 				})
 			})
 
 			// 监听失败
 			S.on('error', () => {
 				console.log('连接失败')
+				state.socket = null
 			})
 			// 监听断开连接
 			S.on('disconnected', () => {
 				console.log('断开连接')
+				state.socket = null
 			})
 		}
 	}
