@@ -16,7 +16,7 @@
 			<view class="flex flex-wrap">
 				<view class="p position-relative list-item" v-for="(item,index) in list" :key="index"
 					@tap="openLive(item.id)">
-					<image class="rounded" src="/static/demo/1.jpg" mode="aspectFill"
+					<image class="rounded" :src="item.cover" mode="aspectFill"
 						style="width: 365rpx;height: 365rpx;">
 					</image>
 					<view class="rounded-circle position-absolute px-2 flex align-center"

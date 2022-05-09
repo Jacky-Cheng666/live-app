@@ -90,14 +90,21 @@ export default new Vuex.Store({
 				const { id } = S
 				// 接收后端传过来的数据
 				S.on(id, (e) => {
+					console.log('e', e)
 					let d = e.data
 					if(d.action==='error'){
 						let msg  = d.payload
+						if(e.meta.notoast)return
 						return uni.showToast({
 							title: msg,
 							icon: 'none'
 						});
 					}
+				})
+				
+				// 监听在线用户信息
+				S.on('online', d=>{
+					console.log('d', d)
 				})
 			})
 
