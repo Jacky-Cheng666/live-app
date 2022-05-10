@@ -88,6 +88,20 @@ export default new Vuex.Store({
 					data: e
 				})
 			}
+			
+			let commentEvent = (e)=>{
+				uni.$emit('live', {
+					type: "comment",
+					data: e
+				})
+			}
+			
+			let giftEvent = (e)=>{
+				uni.$emit('live', {
+					type: "gift",
+					data: e
+				})
+			}
 
 			// 监听连接
 			S.on('connect', () => {
@@ -113,12 +127,17 @@ export default new Vuex.Store({
 
 				// 监听在线用户信息
 				S.on('online', onlineEvent)
+				// 监听实时弹幕
+				S.on('comment', commentEvent)
+				// 监听实时礼物数据
+				S.on('gift', giftEvent)
 			})
 			
 			// 移除监听器
 			const removeListener = ()=>{
 				if(S){
 					S.removeListener('online', onlineEvent)
+					S.removeListener('comment', commentEvent)
 				}
 			}
 

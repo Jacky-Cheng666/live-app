@@ -28,13 +28,13 @@
 				<view class="flex-1 flex align-center rounded-circle px-1 ml-5"
 					style="background-color: rgba(0,0,0,.4);">
 					<scroll-view :show-scrollbar="false" class="flex-1 flex" scroll-x="true">
-						<image v-for="i in 20" :key="i" class="rounded-circle" src="/static/tabbar/min.png"
-							style="width: 70rpx;height: 70rpx;">
+						<image v-for="(item,index) in list" :key="index" class="rounded-circle"
+							:src="item.avatar || '/static/tabbar/min.png'" style="width: 70rpx;height: 70rpx;">
 					</scroll-view>
 					<view class="rounded-circle flex justify-center align-center bg-danger"
 						style="width: 70rpx;height: 70rpx;">
 						<!-- 实时在线人数 -->
-						<text class="text-white font-sm">100</text>
+						<text class="text-white font-sm">{{list.length}}</text>
 					</view>
 				</view>
 			</view>
@@ -167,7 +167,8 @@
 				statusBarH: 0,
 				content: "",
 				gifts: [],
-				giftActiveId: 0
+				giftActiveId: 0,
+				list: [], //在线用户列表
 			}
 		},
 		onLoad(e) {
@@ -233,9 +234,29 @@
 		},
 		methods: {
 			handleLiveEvent(e) {
+				console.log('e', e)
 				let d = e.data
 				switch (e.type) {
 					case 'online':
+						if (d.action === 'join') {
+							this.list = d.data
+						}
+						break;
+					case 'comment':
+						this.$refs.danmu.send({
+							id: d.id,
+							name: d.user.name,
+							content: d.content
+						})
+						break;
+					case 'gift':
+						this.$refs.gift.send({
+							username: d.username,
+							avatar: d.avatar,
+							gift_name: d.gift_name,
+							gift_image: $C.baseUrl + d.gift_image,
+							num: 1
+						})
 						break;
 					default:
 						break;
@@ -258,11 +279,14 @@
 			},
 			submit() {
 				if (this.content.length === 0) return
-				this.$refs.danmu.send({
-					id: new Date().getTime(),
-					name: '马翠张',
-					content: this.content.trim()
-				})
+				// 向后台发送socket事件
+				if (this.socket && this.token) {
+					this.socket.emit('comment', {
+						live_id: this.id,
+						data: this.content.trim(),
+						token: this.token
+					})
+				}
 				this.content = ''
 				this.$refs.input.close()
 			},
@@ -288,13 +312,28 @@
 				let index = this.gifts.findIndex(v => v.id === this.giftActiveId)
 				if (index === -1) return
 				let item = this.gifts[index]
-				this.$refs.gift.send({
-					username: "池大为",
-					avatar: "",
-					gift_name: item.name,
-					gift_image: item.image,
-					num: 1
-				})
+
+
+				// 向后台发送socket事件
+				if (!this.token) {
+					uni.navigateTo({
+						url: '/pages/login/login'
+					})
+					uni.showToast({
+						title: '请先登录',
+						icon: 'none'
+					});
+					return
+				}
+				if (this.socket) {
+					this.socket.emit('gift', {
+						live_id: this.id,
+						gift_id: item.id,
+						token: this.token
+					})
+				}
+
+
 				this.closeGift()
 			},
 			openCoin() {
