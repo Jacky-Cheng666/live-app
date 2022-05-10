@@ -185,6 +185,8 @@
 				})
 				// console.log('gifts', this.gifts)
 			})
+
+			uni.$on('live', this.handleLiveEvent)
 		},
 		computed: {
 			...mapState({
@@ -220,14 +222,25 @@
 			// 	})
 			// 	id++
 			// }, 3000)
-			
+
 			// 加入直播间
 			this.joinOrLeave('join')
 		},
 		onUnload() {
 			this.joinOrLeave('leave')
+			// 移除监听器
+			uni.$off('live', this.handleLiveEvent)
 		},
 		methods: {
+			handleLiveEvent(e) {
+				let d = e.data
+				switch (e.type) {
+					case 'online':
+						break;
+					default:
+						break;
+				}
+			},
 			// 加入或离开直播间
 			joinOrLeave(type) {
 				if (this.socket && this.token) {

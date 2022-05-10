@@ -82,41 +82,57 @@ export default new Vuex.Store({
 				timeout: 5000
 			})
 
+			let onlineEvent = (e) => {
+				uni.$emit('live', {
+					type: "online",
+					data: e
+				})
+			}
+
 			// 监听连接
 			S.on('connect', () => {
 				console.log('socket_connected')
 				state.socket = S
 				// socket.io唯一连接id，可以去监控这个id实现点对点通讯
-				const { id } = S
+				const {
+					id
+				} = S
 				// 接收后端传过来的数据
 				S.on(id, (e) => {
 					console.log('e', e)
 					let d = e.data
-					if(d.action==='error'){
-						let msg  = d.payload
-						if(e.meta.notoast)return
+					if (d.action === 'error') {
+						let msg = d.payload
+						if (e.meta.notoast) return
 						return uni.showToast({
 							title: msg,
 							icon: 'none'
 						});
 					}
 				})
-				
+
 				// 监听在线用户信息
-				S.on('online', d=>{
-					console.log('d', d)
-				})
+				S.on('online', onlineEvent)
 			})
+			
+			// 移除监听器
+			const removeListener = ()=>{
+				if(S){
+					S.removeListener('online', onlineEvent)
+				}
+			}
 
 			// 监听失败
 			S.on('error', () => {
 				console.log('连接失败')
 				state.socket = null
+				removeListener()
 			})
 			// 监听断开连接
 			S.on('disconnected', () => {
 				console.log('断开连接')
 				state.socket = null
+				removeListener()
 			})
 		}
 	}
