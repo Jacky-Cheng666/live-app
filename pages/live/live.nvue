@@ -234,7 +234,7 @@
 		},
 		methods: {
 			handleLiveEvent(e) {
-				console.log('e', e)
+				// console.log('e', e)
 				let d = e.data
 				switch (e.type) {
 					case 'online':
@@ -250,6 +250,7 @@
 						})
 						break;
 					case 'gift':
+						this.detail.coin += d.gift_coin * d.num
 						this.$refs.gift.send({
 							username: d.username,
 							avatar: d.avatar,
