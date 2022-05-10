@@ -53,7 +53,7 @@ export default {
                     // 服务端失败
                     if(result.statusCode !== 200){
                         if (options.toast !== false) {
-							console.log(result);
+							console.log('result', result);
                             uni.showToast({
                                 title: result.data.data || '服务端失败',
                                 icon: 'none'

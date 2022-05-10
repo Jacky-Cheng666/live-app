@@ -13,11 +13,12 @@
 				<view class="flex-1 flex justify-between align-center rounded-circle"
 					style="background-color: rgba(0,0,0,.4);">
 					<view class="p flex align-center">
-						<image class="rounded-circle" src="/static/tabbar/min.png" style="width: 70rpx;height: 70rpx;">
+						<image class="rounded-circle" :src="user.avatar || '/static/tabbar/min.png'"
+							style="width: 70rpx;height: 70rpx;">
 						</image>
 						<view class="ml-1">
-							<text class="text-white font">昵称</text>
-							<text class="text-white font">999+</text>
+							<text class="text-white font">{{user.nickname || user.username}}</text>
+							<text class="text-white font">{{detail.look_count}}</text>
 						</view>
 					</view>
 					<!-- 关注 -->
@@ -30,12 +31,12 @@
 				<view class="flex-1 flex align-center rounded-circle px-1 ml-5"
 					style="background-color: rgba(0,0,0,.4);">
 					<scroll-view :show-scrollbar="false" class="flex-1 flex" scroll-x="true">
-						<image v-for="i in 20" :key="i" class="rounded-circle" src="/static/tabbar/min.png"
-							style="width: 70rpx;height: 70rpx;">
+						<image v-for="(item,index) in list" :key="index" class="rounded-circle"
+							:src="item.avatar || '/static/tabbar/min.png'" style="width: 70rpx;height: 70rpx;">
 					</scroll-view>
 					<view class="rounded-circle flex justify-center align-center bg-danger"
 						style="width: 70rpx;height: 70rpx;">
-						<text class="text-white font-sm">100</text>
+						<text class="text-white font-sm">{{list.length}}</text>
 					</view>
 				</view>
 			</view>
@@ -44,7 +45,7 @@
 				<view class="flex align-center rounded-circle p-2"
 					style="background-color: rgba(0,0,0,.4);width: 300rpx;">
 					<text class="text-warning font mr-1">金币</text>
-					<text class="text-white font">0</text>
+					<text class="text-white font">{{detai.coin}}</text>
 				</view>
 			</view>
 			<!-- 收到礼物 -->
@@ -88,9 +89,10 @@
 
 				<!-- 更多 -->
 				<view class="flex flex-wrap" v-else-if="popupType==='more'">
-					<view class="flex flex-column justify-center align-center" style="width: 150rpx;height: 150rpx;">
+					<view class="flex flex-column justify-center align-center" style="width: 150rpx;height: 150rpx;"
+						@tap="pauseOrPlay">
 						<text class="iconfont mb-1">&#xe611;</text>
-						<text class="font">暂停</text>
+						<text class="font">{{isPause?'继续':'暂停'}}</text>
 					</view>
 					<view class="flex flex-column justify-center align-center" style="width: 150rpx;height: 150rpx;"
 						@tap="back">
@@ -114,7 +116,11 @@
 <script>
 	import fGift from '@/components/live/f-gift.vue'
 	import fDanmu from '@/components/live/f-danmu.vue'
-	import demoGifts from '@/demo/gifts.js'
+	import $H from '@/common/request.js'
+	import $C from '@/common/config.js'
+	import {
+		mapState
+	} from 'vuex'
 	export default {
 		components: {
 			fGift,
@@ -174,9 +180,20 @@
 					type: "FHD",
 					desc: "超清"
 				}],
+				detai: {},
+				sign: "", //直播间签名
+				list: [], //在线用户列表
+				isStart: false, //是否开始推流
+				isPause: false, //是否暂停推流
+				isget: false
 			}
 		},
 		computed: {
+			...mapState({
+				socket: state => state.socket,
+				token: state => state.token,
+				user: state => state.user
+			}),
 			popTitle() {
 				let o = {
 					mode: "画质",
@@ -188,45 +205,176 @@
 			}
 		},
 		onLoad(e) {
+			console.log('liveroom', e)
 			let res = uni.getSystemInfoSync()
 			this.statusBarH = res.statusBarHeight
 			this.windowHeight = res.windowHeight
-			// 演示数据
-			this.gifts = demoGifts
-			let options = JSON.parse(e.options)
-			this.mode = options.mode
-			this.beauty = options.beauty
-			this.position = options.position
-			this.whiteness = options.whiteness
+			// // 演示数据
+			if (e.options) {
+				let options = JSON.parse(e.options)
+				this.mode = options.mode
+				this.beauty = options.beauty
+				this.position = options.position
+				this.whiteness = options.whiteness
+			}
+			if (e.data) {
+				let d = JSON.parse(decodeURIComponent(e.data))
+				this.detail = d.data
+				this.sign = d.sign
+				// uni.$on('live', this.handleLiveEvent)
+
+				this.url = `rtmp://192.168.1.206:23480/live/${this.detail.key}?sign=${this.sign}`
+			}
+
 		},
 		onReady() {
 			this.context = uni.createLivePusherContext("livePusher", this);
 			// 开启预览
 			this.startPreview()
-
-			// 送礼物演示
-			// setInterval(() => {
-			// 	this.$refs.gift.send({
-			// 		username: "池大为",
-			// 		avatar: "",
-			// 		gift_name: "豪华游艇",
-			// 		gift_image: "/static/gift/3.png",
-			// 		num: 9
-			// 	})
-			// }, 3000)
-
-			// 发送弹幕演示
-			let id = 1
-			setInterval(() => {
-				this.$refs.danmu.send({
-					id,
-					name: '池厅长' + id,
-					content: '听说校花俞小曼很好看'
-				})
-				id++
-			}, 3000)
+			// 开始推流
+			this.start()
+		},
+		onUnload() {
+			this.joinOrLeave('leave')
+			// 移除监听器
+			uni.$off('live', this.handleLiveEvent)
+		},
+		onBackPress() {
+			if(!this.isget){
+				this.back()
+				return true
+			}
 		},
 		methods: {
+			pauseOrPlay() {
+				if (!this.isPause) {
+					this.pause()
+				} else {
+					this.resume()
+				}
+			},
+			// 退出直播间
+			back() {
+				uni.showModal({
+					title: '提示',
+					content: '是否退出直播间',
+					showCancel: true,
+					cancelText: '',
+					confirmText: '',
+					success: res => {
+						if (res.confirm) {
+							this.stop()
+							this.isget = true
+							uni.navigateBack({
+								delta:1
+							})
+						}
+					}
+				});
+			},
+			// 开始推流
+			start() {
+				this.context.start({
+					success: async () => {
+						this.isStart = true
+						let result = await $H.post('live/changestatus', {
+							id: this.detai.id,
+							type: "play"
+						}, {
+							token: true
+						})
+						this.joinOrLeave('join')
+						console.log('改变直播间状态', result)
+					}
+				})
+			},
+			// 暂停推流
+			pause() {
+				this.context.pause({
+					success: async () => {
+						this.isPause = true
+						let result = await $H.post('live/changestatus', {
+							id: this.detai.id,
+							type: "pause"
+						}, {
+							token: true
+						})
+
+						console.log('改变直播间状态', result)
+					}
+				})
+			},
+			// 恢复推流
+			resume() {
+				this.context.resume({
+					success: async () => {
+						this.isPause = false
+						let result = await $H.post('live/changestatus', {
+							id: this.detai.id,
+							type: "play"
+						}, {
+							token: true
+						})
+
+						console.log('改变直播间状态', result)
+					}
+				})
+			},
+			// 停止推流
+			stop() {
+				this.context.stop({
+					success: async () => {
+						this.isStart = false
+						let result = await $H.post('live/changestatus', {
+							id: this.detai.id,
+							type: "stop"
+						}, {
+							token: true
+						})
+
+						console.log('改变直播间状态', result)
+					}
+				})
+			},
+			handleLiveEvent(e) {
+				// console.log('e', e)
+				let d = e.data
+				switch (e.type) {
+					case 'online':
+						if (d.action === 'join') {
+							this.list = d.data
+						}
+						break;
+					case 'comment':
+						this.$refs.danmu.send({
+							id: d.id,
+							name: d.user.name,
+							content: d.content
+						})
+						break;
+					case 'gift':
+						this.detail.coin += d.gift_coin * d.num
+						this.$refs.gift.send({
+							username: d.username,
+							avatar: d.avatar,
+							gift_name: d.gift_name,
+							gift_image: $C.baseUrl + d.gift_image,
+							num: 1
+						})
+						break;
+					default:
+						break;
+				}
+			},
+			// 加入或离开直播间
+			joinOrLeave(type) {
+				if (this.socket && this.token) {
+					this.socket.emit(type + 'Live', {
+						live_id: this.detail.id,
+						token: this.token
+					})
+				}
+			},
 			// 开启预览
 			startPreview() {
 				this.context.startPreview({

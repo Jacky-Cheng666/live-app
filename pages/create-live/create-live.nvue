@@ -6,17 +6,19 @@
 			:style="'height: '+windowHeight+'px;'" style="width: 750rpx;"></live-pusher>
 		<view v-if="showBars">
 			<view class="position-fixed left-0 right-0 flex" :style="`top: ${statusBarHeight}px`">
-				<view class="flex justify-center align-center" style="width: 90rpx;height: 90rpx;">
+				<view class="flex justify-center align-center" style="width: 90rpx;height: 90rpx;" @tap="back">
 					<text class="iconfont text-white">&#xe607;</text>
 				</view>
 				<view class="flex-1 p-2 flex align-center" style="height: 160rpx;background-color: rgba(0,0,0,.2);">
-					<view class="bg-white rounded position-relative" style="width: 120rpx;height: 120rpx;">
-						<image class="" src="/static/gift/4.png" style="width: 120rpx;height: 120rpx;"></image>
+					<view class="bg-white rounded position-relative" style="width: 120rpx;height: 120rpx;"
+						@tap="chooseCover">
+						<image class="" :src="form.cover || '/static/gift/4.png'" style="width: 120rpx;height: 120rpx;">
+						</image>
 						<text class="text-white position-absolute left-0 right-0 bottom-0 font">更换封面</text>
 					</view>
 					<view class="flex-1 ml-2">
-						<input class="mb-2" type="text" placeholder="请输入直播标题" />
-						<text class="text-white font">#选择分类</text>
+						<input class="mb-2 text-white" v-model="form.title" type="text" placeholder="请输入直播标题" />
+						<!-- <text class="text-white font">#选择分类</text> -->
 					</view>
 				</view>
 				<view class="" style="width: 100rpx;">
@@ -87,6 +89,8 @@
 </template>
 
 <script>
+	import $H from '@/common/request.js'
+	import $C from '@/common/config.js'
 	export default {
 		data() {
 			return {
@@ -110,7 +114,11 @@
 					type: "FHD",
 					desc: "超清"
 				}],
-				showBars: true
+				showBars: true,
+				form: {
+					title: '',
+					cover: ''
+				}
 			}
 		},
 		onLoad() {
@@ -139,6 +147,27 @@
 
 		},
 		methods: {
+			chooseCover() {
+				uni.chooseImage({
+					count: 1,
+					success: res => {
+						// console.log('res', res.tempFilePaths[0])
+						$H.upload('/upload', {
+							filePath: res.tempFilePaths[0],
+						}, (p) => {
+							// console.log('percent', p)
+						}).then(res => {
+							// console.log('res', res)
+							this.form.cover = $C.baseUrl + res.url
+						})
+					}
+				})
+			},
+			back() {
+				uni.navigateBack({
+					delta: 1
+				})
+			},
 			// 开启预览
 			startPreview() {
 				this.context.startPreview({
@@ -183,14 +212,20 @@
 			handleSliderChange(e) {
 				this[this.popupType] = e.detail.value
 			},
-			openLiveRoom() {
-				uni.navigateTo({
+			// 创建直播间
+			async openLiveRoom() {
+
+				let res = await $H.post('/live/create', this.form, {
+					token: true
+				})
+				console.log('res', res)
+				uni.redirectTo({
 					url: '/pages/live-room/live-room?options=' + JSON.stringify({
 						mode: this.mode,
 						position: this.position,
 						beauty: this.beauty,
 						whiteness: this.whiteness,
-					})
+					}) + '&data='+ encodeURIComponent(JSON.stringify(res))
 				})
 			}
 		}
