@@ -203,7 +203,7 @@
 				return o[this.popupType]
 			},
 			// 推流地址
-			pushUrl(){
+			pushUrl() {
 				console.log(`${$C.pushBaseUrl}${this.detail.key}?sign=${this.sign}`)
 				return `${$C.pushBaseUrl}${this.detail.key}?sign=${this.sign}`
 			}
@@ -240,12 +240,13 @@
 			// 移除监听器
 			uni.$off('live', this.handleLiveEvent)
 		},
-		// onBackPress() {
-		// 	if(!this.isget){
-		// 		this.back()
-		// 		return true
-		// 	}
-		// },
+		onBackPress() {
+			if (!this.isget) {
+				this.back()
+				return true
+			}
+
+		},
 		methods: {
 			pauseOrPlay() {
 				if (!this.isPause) {
@@ -258,15 +259,13 @@
 			back() {
 				uni.showModal({
 					title: '提示',
-					content: '是否退出直播间',
+					content: '正在直播中，是否确认要退出？',
 					showCancel: true,
-					success: res => {
+					success: async (res) => {
 						if (res.confirm) {
-							this.stop()
 							this.isget = true
-							uni.navigateBack({
-								delta:1
-							})
+							// 停止推流，并返回上层
+							this.stop()	
 						}
 					}
 				});
@@ -323,14 +322,16 @@
 				this.context.stop({
 					success: async () => {
 						this.isStart = false
-						let result = await $H.post('live/changestatus', {
+						let result = await $H.post('/live/changestatus', {
 							id: this.detail.id,
 							type: "stop"
 						}, {
 							token: true
 						})
 
-						console.log('改变直播间状态', result)
+						uni.navigateBack({
+							delta: 1
+						})
 					}
 				})
 			},
@@ -429,22 +430,6 @@
 				})
 				this.content = ''
 				this.$refs.input.close()
-			},
-			back() {
-				uni.showModal({
-					title: '提示',
-					content: '正在直播中，是否要退出',
-					showCancel: true,
-					cancelText: '取消',
-					confirmText: '确认',
-					success: res => {
-						uni.navigateBack({
-							delta: 1
-						})
-					},
-
-				});
-
 			},
 			handleBottomEvent(item) {
 				this[item.event](item.params)
