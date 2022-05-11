@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<live-pusher id='livePusher' ref="livePusher" class="livePusher flex-1" :url="url" :mode="mode"
+		<live-pusher id='livePusher' ref="livePusher" class="livePusher flex-1" :url="pushUrl" :mode="mode"
 			:enable-camera="enableCamera" :auto-focus="true" :device-position="position" :beauty="beauty"
 			:whiteness="whiteness" aspect="9:16" @statechange="statechange" @netstatus="netstatus" @error="error"
 			:style="'height: '+windowHeight+'px;'" style="width: 750rpx;"></live-pusher>
@@ -128,7 +128,6 @@
 		},
 		data() {
 			return {
-				url: "",
 				enableCamera: true,
 				statusBarH: 0,
 				windowHeight: 0,
@@ -202,14 +201,17 @@
 					more: "更多"
 				}
 				return o[this.popupType]
+			},
+			// 推流地址
+			pushUrl(){
+				console.log(`${$C.pushBaseUrl}${this.detail.key}?sign=${this.sign}`)
+				return `${$C.pushBaseUrl}${this.detail.key}?sign=${this.sign}`
 			}
 		},
 		onLoad(e) {
-			console.log('liveroom', e)
 			let res = uni.getSystemInfoSync()
 			this.statusBarH = res.statusBarHeight
 			this.windowHeight = res.windowHeight
-			// // 演示数据
 			if (e.options) {
 				let options = JSON.parse(e.options)
 				this.mode = options.mode
@@ -222,10 +224,7 @@
 				this.detail = d.data
 				this.sign = d.sign
 				// uni.$on('live', this.handleLiveEvent)
-
-				this.url = `rtmp://192.168.1.206:23480/live/${this.detail.key}?sign=${this.sign}`
-				
-				console.log('pushUrl', this.url)
+				console.log('detail', this.detail)
 			}
 
 		},
@@ -284,7 +283,6 @@
 							token: true
 						})
 						this.joinOrLeave('join')
-						console.log('改变直播间状态', result)
 					}
 				})
 			},

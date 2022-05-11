@@ -219,13 +219,15 @@
 					token: true
 				})
 				console.log('res', res)
+				let options = JSON.stringify({
+					mode: this.mode,
+					position: this.position,
+					beauty: this.beauty,
+					whiteness: this.whiteness,
+				})
 				uni.redirectTo({
-					url: '/pages/live-room/live-room?options=' + JSON.stringify({
-						mode: this.mode,
-						position: this.position,
-						beauty: this.beauty,
-						whiteness: this.whiteness,
-					}) + '&data='+ encodeURIComponent(JSON.stringify(res))
+					// url: '/pages/live-room/live-room?options=' + options + '&data=' + encodeURIComponent(JSON.stringify(res))
+					url: `/pages/live-room/live-room?options=${options}&data=${encodeURIComponent(JSON.stringify(res))}`
 				})
 			}
 		}

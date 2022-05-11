@@ -198,7 +198,8 @@
 				if (this.detail.key === '' || this.sign === '') {
 					return ''
 				}
-				return `${$C.liveUrl}${this.detail.key}.flv?sign=${this.sign}`
+				console.log('pullUrl', `${$C.pullBaseUrl}${this.detail.key}.flv?sign=${this.sign}`)
+				return `${$C.pullBaseUrl}${this.detail.key}.flv?sign=${this.sign}`
 			}
 		},
 		onReady() {
