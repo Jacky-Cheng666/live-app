@@ -1,5 +1,12 @@
 <template>
 	<view>
+
+		<!-- 检查是否已登录 -->
+		<view v-if="showLoading" class="position-fixed top-0 right-0 left-0 bottom-0 bg-light flex align-center justify-center"
+			style="z-index: 99;">
+			<text class="font-md text-muted">加载中...</text>
+		</view>
+
 		<view class="flex align-center justify-center" style="height: 350rpx;">
 			<text style="font-size: 50rpx;">欢迎回来</text>
 		</view>
@@ -36,7 +43,19 @@
 					username: "",
 					password: "",
 					repassword: ""
-				}
+				},
+				showLoading: true
+			}
+		},
+		onLoad() {
+			let token = uni.getStorageSync('token')
+			if (!token) {
+				// 用户未登录
+				this.showLoading = false
+			} else {
+				uni.switchTab({
+					url: '/pages/index/index'
+				})
 			}
 		},
 		methods: {
@@ -60,8 +79,8 @@
 					}
 				} else {
 					this.$store.dispatch('login', res)
-					uni.navigateBack({
-						delta: 1
+					uni.switchTab({
+						url: '/pages/index/index'
 					})
 				}
 			}

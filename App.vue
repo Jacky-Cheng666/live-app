@@ -2,8 +2,7 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
-			// 连接socket
-			this.$store.dispatch('connectSocket')
+			
 
 			// 引入nvue字体图标库，本地ttf字体文件。
 			const domModule = weex.requireModule('dom')

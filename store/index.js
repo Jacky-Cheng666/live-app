@@ -30,24 +30,27 @@ export default new Vuex.Store({
 		},
 		// 初始化用户登录状态
 		initUser({
-			state
+			state,dispatch
 		}) {
 			let u = uni.getStorageSync('user')
 			let t = uni.getStorageSync('token')
 			if (u) {
 				state.user = JSON.parse(u)
-			}
-			if (t) {
 				state.token = t
+				// 连接socket
+				dispatch('connectSocket')
 			}
 		},
+		// 用户登录
 		login({
-			state
+			state,dispatch
 		}, user) {
 			state.user = user
 			state.token = user.token
 			uni.setStorageSync('user', JSON.stringify(user))
 			uni.setStorageSync('token', user.token)
+			// 连接socket
+			dispatch('connectSocket')
 		},
 		async getUserInfo({
 			state
@@ -61,15 +64,22 @@ export default new Vuex.Store({
 			uni.setStorageSync('user', JSON.stringify(user))
 		},
 		logout({
-			state
+			state,dispatch
 		}) {
 			$H.post('/logout', {}, {
 				token: true
 			})
+			dispatch('closeSocket')
 			state.user = null
 			state.token = null
 			uni.removeStorageSync('user')
 			uni.removeStorageSync('token')
+		},
+		// 断开socket连接
+		closeSocket({state,dispatch}){
+			if(state.socket){
+				state.socket.close()
+			}
 		},
 		// 连接socket
 		connectSocket({

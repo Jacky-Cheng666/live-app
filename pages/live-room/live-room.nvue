@@ -45,7 +45,7 @@
 				<view class="flex align-center rounded-circle p-2"
 					style="background-color: rgba(0,0,0,.4);width: 300rpx;">
 					<text class="text-warning font mr-1">金币</text>
-					<text class="text-white font">{{detai.coin}}</text>
+					<text class="text-white font">{{detail.coin}}</text>
 				</view>
 			</view>
 			<!-- 收到礼物 -->
@@ -180,7 +180,7 @@
 					type: "FHD",
 					desc: "超清"
 				}],
-				detai: {},
+				detail: {},
 				sign: "", //直播间签名
 				list: [], //在线用户列表
 				isStart: false, //是否开始推流
@@ -224,6 +224,8 @@
 				// uni.$on('live', this.handleLiveEvent)
 
 				this.url = `rtmp://192.168.1.206:23480/live/${this.detail.key}?sign=${this.sign}`
+				
+				console.log('pushUrl', this.url)
 			}
 
 		},
@@ -239,12 +241,12 @@
 			// 移除监听器
 			uni.$off('live', this.handleLiveEvent)
 		},
-		onBackPress() {
-			if(!this.isget){
-				this.back()
-				return true
-			}
-		},
+		// onBackPress() {
+		// 	if(!this.isget){
+		// 		this.back()
+		// 		return true
+		// 	}
+		// },
 		methods: {
 			pauseOrPlay() {
 				if (!this.isPause) {
@@ -259,8 +261,6 @@
 					title: '提示',
 					content: '是否退出直播间',
 					showCancel: true,
-					cancelText: '',
-					confirmText: '',
 					success: res => {
 						if (res.confirm) {
 							this.stop()
@@ -277,8 +277,8 @@
 				this.context.start({
 					success: async () => {
 						this.isStart = true
-						let result = await $H.post('live/changestatus', {
-							id: this.detai.id,
+						let result = await $H.post('/live/changestatus', {
+							id: this.detail.id,
 							type: "play"
 						}, {
 							token: true
@@ -294,7 +294,7 @@
 					success: async () => {
 						this.isPause = true
 						let result = await $H.post('live/changestatus', {
-							id: this.detai.id,
+							id: this.detail.id,
 							type: "pause"
 						}, {
 							token: true
@@ -310,7 +310,7 @@
 					success: async () => {
 						this.isPause = false
 						let result = await $H.post('live/changestatus', {
-							id: this.detai.id,
+							id: this.detail.id,
 							type: "play"
 						}, {
 							token: true
@@ -326,7 +326,7 @@
 					success: async () => {
 						this.isStart = false
 						let result = await $H.post('live/changestatus', {
-							id: this.detai.id,
+							id: this.detail.id,
 							type: "stop"
 						}, {
 							token: true
@@ -385,11 +385,11 @@
 			},
 			// 直播状态变化
 			statechange(e) {
-				console.log('statechange', e)
+				// console.log('statechange', e)
 			},
 			// 直播网络变化
 			netstatus(e) {
-				console.log('netstatus', e)
+				// console.log('netstatus', e)
 			},
 			// 监听错误
 			error(e) {
