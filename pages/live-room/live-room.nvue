@@ -223,17 +223,17 @@
 				let d = JSON.parse(decodeURIComponent(e.data))
 				this.detail = d.data
 				this.sign = d.sign
-				// uni.$on('live', this.handleLiveEvent)
-				console.log('detail', this.detail)
+				
+				// console.log('detail', this.detail)
 			}
+			uni.$on('live', this.handleLiveEvent)
 
 		},
 		onReady() {
 			this.context = uni.createLivePusherContext("livePusher", this);
 			// 开启预览
 			this.startPreview()
-			// 开始推流
-			this.start()
+			
 		},
 		onUnload() {
 			this.joinOrLeave('leave')
@@ -336,7 +336,7 @@
 				})
 			},
 			handleLiveEvent(e) {
-				// console.log('e', e)
+				console.log('主播收到礼物', e)
 				let d = e.data
 				switch (e.type) {
 					case 'online':
@@ -379,6 +379,8 @@
 				this.context.startPreview({
 					success: (e) => {
 						console.log('preview', e)
+						// 开始推流
+						this.start()
 					}
 				})
 			},
